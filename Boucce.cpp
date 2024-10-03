@@ -1,272 +1,225 @@
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
-#include <string>
+import random
+import math
 
-using namespace std;
-int flag = 1;
-// Function declarations
-void instructions();
-void ball_input(int J, double V[], double B[], double B1[], double P1);
-void simulate_ball(int J, int Q, double V[], double B[], double B1[], double D[], double X[], double Y[],
-    double A, double& S1, double& S2, double P1);
-void collision_with_ball(int J, int K, double V[], double B[], double& S1, double& S2, double& S5, double& S6,
-    double X[], double Y[], double P1);
-void collision_with_jack(int J, int K, double V[], double B[], double& S1, double& S2, double& S5, double& S6,
-    double P1);
-void report_positions(int Q, double D[], double X[], double Y[]);
+# 10 PRINT TAB(25);"BOCCE"
+# 20 PRINT TAB(19);"CREATIVE COMPUTING"
+# 30 PRINT TAB(17);"MORRISTOWN NEW JERSEY"
+# 40 PRINT:PRINT:PRINT
+print(" " * 25 + "BOCCE")
+print(" " * 19 + "CREATIVE COMPUTING")
+print(" " * 17 + "MORRISTOWN NEW JERSEY")
+print("\n\n\n")
 
-int main() {
-    // Print the title
-    cout << setw(30) << "BOCCE" << endl;
-    cout << setw(37) << "CREATIVE COMPUTING" << endl;
-    cout << setw(39) << "MORRISTOWN NEW JERSEY" << endl;
-    cout << endl << endl << endl;
+while True:
+    # 1000 Q=5
+    Q = 5
 
-    int Q = 5;
-    cout << "THIS GAME SIMULATES THE GAME OF LAWN BOWLS" << endl;
+    # 1010 PRINT "THIS GAME SIMULATES THE GAME OF LAWN BOWLS"
+    print("THIS GAME SIMULATES THE GAME OF LAWN BOWLS")
 
-    string Z;
-    cout << "DO YOU NEED INSTRUCTIONS? ENTER YES OR NO? ";
-    cin >> Z;
+    # 1020 INPUT "DO YOU NEED INSTRUCTIONS? ENTER YES OR NO";Z$
+    Z = input("DO YOU NEED INSTRUCTIONS? ENTER YES OR NO? ")
+    # 1030 DIM B(9),B1(9),D(9),V(9),X(9),Y(9)
+    B = [0]*10
+    B1 = [0]*10
+    D = [0]*10
+    V = [0]*10
+    X = [0]*10
+    Y = [0]*10
 
-    if (Z == "YES" || Z == "yes") {
-        instructions();
-    }
-    else
-        cout << endl;
+    # 1040 PRINT: IF Z$="YES" THEN GOSUB 1770
+    if Z.strip().upper() == "YES":
+        # 1770-1880 Instructions
+        print("IN THIS GAME YOU ROLL", Q-1, "BALLS SUCCESSIVELY AT A TARGET")
+        print("BALL (CALLED A JACK). THE OBJECT IS TO GET THE BALLS AS CLOSE")
+        print("TO THE JACK AS POSSIBLE. THE BALLS ARE 10 CM IN DIAMETER AND")
+        print("ARE WEIGHTED SO THAT THEY ROLL IN A CURVE. YOU WILL HAVE TO")
+        print("ROLL THEM AT AN ANGLE TO THE LINE FROM YOU AT COORDINATES 0,0")
+        print("TO THE JACK AT COORDINATES X,Y. A POSITIVE ANGLE WILL MAKE")
+        print("THE BALL CURVE CLOCKWISE. A NEGATIVE ANGLE WILL  MAKE IT CURVE")
+        print("ANTI-CLOCKWISE. THE JACK IS A 4 CM WIDE AND WILL ROLL")
+        print("STRAIGHT IF YOU HIT IT. BALLS HIT BY YOUR THROWN BALL MAY")
+        print("CURVE IN EITHER DIRECTION.")
+        print()
+        print("HINT. TRY AN INITIAL VELOCITY OF 500 AND AN ANGLE OF 10")
+        print()
 
-    // Initialize random seed
-    srand(time(0));
+    # 1045 P1=3.14159
+    P1 = 3.14159
 
-    string YS;
-    do {
-        double B[10] = { 0 }, B1[10] = { 0 }, D[10] = { 0 }, V[10] = { 0 }, X[10] = { 0 }, Y[10] = { 0 };
-        double P1 = 3.14159;
-        double S1 = 0, S2 = 0, A = -49.3;
-        double D1 = 0;
+    # 1050 S1=0:S2=0:A=-49.3
+    S1 = 0
+    S2 = 0
+    A = -49.3
 
-        // Random placement of the jack
-        X[1] = int(2000 + 700 * ((double)rand() / RAND_MAX));
-        Y[1] = int(200 - 400 * ((double)rand() / RAND_MAX));
+    # 1070 X(1)=INT(2000+700*RND(1)): Y(1)=INT(200-400*RND(1))
+    X[1] = int(2000 + 700 * random.random())
+    Y[1] = int(200 - 400 * random.random())
 
-        cout << "THE JACK IS LOCATED AT " << X[1] << " " << Y[1] << endl;
+    # For consistent output, you can uncomment the following lines:
+    # X[1] = 2203
+    # Y[1] = 199
 
-        // Now, loop for each ball
-        for (int P = 2; P <= Q; ++P) {
-            int J = P;
-            ball_input(J, V, B, B1, P1);
-            simulate_ball(J, Q, V, B, B1, D, X, Y, A, S1, S2, P1);
-        }
+    # 1080 PRINT "THE JACK IS LOCATED AT ";X(1);Y(1)
+    print("THE JACK IS LOCATED AT", X[1], Y[1])
 
-        // Now, sum the distances
-        D1 = 0;
-        for (int J = 2; J <= Q; ++J) {
-            D1 += D[J];
-        }
+    D1 = 0
 
-        cout << endl << "THE TOTAL DISTANCE OF ALL BALLS FROM THE JACK IS " << D1 << " CM" << endl;
+    # 1090 FOR P=2 TO Q
+    for P in range(2, Q + 1):
+        # 1100 J=P:GOSUB 1570
+        J = P
 
-        if (D1 < Q * Q) {
-            cout << "MAGNIFICENT BOWLING! WHAT AN EYE!!" << endl;
-        }
-        else if (D1 < 2 * Q * Q) {
-            cout << "EXCELLENT BUT COULD BE BETTER:" << endl;
-        }
-        else if (D1 < 3 * Q * Q) {
-            cout << "GOOD BUT NEEDS SOME IMPROVEMENT" << endl;
-        }
-        else if (D1 < 6 * Q * Q) {
-            cout << "FAIR - YOU NEED MORE PRACTICE" << endl;
-        }
-        else if (D1 < 10 * Q * Q) {
-            cout << "POOR - TRY TO BE MORE CONSISTENT" << endl;
-        }
-        else if (D1 < 20 * Q * Q) {
-            cout << "YOUR GAME NEEDS LOTS OF WORK" << endl;
-        }
-        else {
-            cout << "DON'T PLAY THIS GAME FOR MONEY!!" << endl;
-        }
+        # 1570 PRINT "BALL ";(J-1)
+        print("BALL", J - 1)
 
-        cout << endl << "CARE TO TRY AGAIN? ENTER YES OR NO ";
-        cin >> YS;
-        cout << endl;
+        # 1580 INPUT "VELOCITY";V(J):V(J)=ABS(V(J))
+        while True:
+            V[J] = abs(float(input("VELOCITY? ")))
+            # 1590 IF V(J) > 1000 THEN PRINT "VELOCITY TOO HIGH":GOTO 1580
+            if V[J] > 1000:
+                print("VELOCITY TOO HIGH")
+            else:
+                break
 
-    } while (YS == "YES" || YS == "yes");
+        # 1600 INPUT "ANGLE";B1(J)
+        while True:
+            B1[J] = float(input("ANGLE? "))
+            # 1610 IF ABS(B1(J))> 89 THEN PRINT "ANGLE TO BIG":GOTO 1290
+            if abs(B1[J]) > 89:
+                print("ANGLE TOO BIG")
+            else:
+                break
 
-    return 0;
-}
+        # 1620 PRINT : B(J)=ABS(B(J)*P1/180):GOTO 1290
+        print()
+        B[J] = abs(B1[J] * P1 / 180)
 
-void instructions() {
-    cout <<endl << "IN THIS GAME YOU ROLL " << 4 << " BALLS SUCCESSIVELY AT A TARGET" << endl;
-    cout << "BALL (CALLED A JACK). THE OBJECT IS TO GET THE BALLS AS CLOSE" << endl;
-    cout << "TO THE JACK AS POSSIBLE. THE BALLS ARE 10 CM IN DIAMETER AND" << endl;
-    cout << "ARE WEIGHTED SO THAT THEY ROLL IN A CURVE. YOU WILL HAVE TO" << endl;
-    cout << "ROLL THEM AT AN ANGLE TO THE LINE FROM YOU AT COORDINATES 0,0" << endl;
-    cout << "TO THE JACK AT COORDINATES X,Y. A POSITIVE ANGLE WILL MAKE" << endl;
-    cout << "THE BALL CURVE CLOCKWISE. A NEGATIVE ANGLE WILL MAKE IT CURVE" << endl;
-    cout << "ANTI-CLOCKWISE. THE JACK IS A 4 CM WIDE AND WILL ROLL" << endl;
-    cout << "STRAIGHT IF YOU HIT IT. BALLS HIT BY YOUR THROWN BALL MAY" << endl;
-    cout << "CURVE IN EITHER DIRECTION." << endl;
-    cout << endl << "HINT. TRY AN INITIAL VELOCITY OF 500 AND AN ANGLE OF 10" << endl;
-    cout << endl << endl;
-}
+        # Initialize variables for ball movement
+        K1 = -20
+        if J == 1:
+            K1 = 0
 
-void ball_input(int J, double V[], double B[], double B1[], double P1) {
-    cout << "BALL " << (J - 1) << endl;
-    cout << "VELOCITY? ";
-    cin >> V[J];
-    V[J] = abs(V[J]);
-    while (V[J] > 1000) {
-        cout << "VELOCITY TOO HIGH" << endl;
-        cout << "VELOCITY ";
-        cin >> V[J];
-        V[J] = abs(V[J]);
-    }
-    cout << "ANGLE ";
-    cin >> B1[J];
-    while (abs(B1[J]) > 89) {
-        cout << "ANGLE TOO BIG" << endl;
-        cout << "ANGLE ";
-        cin >> B1[J];
-    }
-    cout << endl;
-    B[J] = abs(B1[J] * P1 / 180);
-}
+        # Ball movement calculations
+        while True:
+            A1 = A * math.cos(B[J]) + K1 * math.cos((P1 / 2) + B[J])
+            A2 = A * math.sin(B[J]) + K1 * math.sin((P1 / 2) + B[J])
+            S3 = V[J] * B[J] * 0.05 + 1.25E-03 * A1
+            S4 = V[J] * B[J] * 0.05 + 1.25E-03 * A2
+            B[J] = math.atan((V[J] * B[J] + A2 * 0.05) / (V[J] * B[J] + A1 * 0.05))
+            if B1[J] < 0:
+                S4 = -S4
+            S5 = S1 + S3
+            S6 = S2 + S4
+            if J != 1:
+                if abs(S5 - X[1]) < 7 and abs(S6 - Y[1]) < 7:
+                    K = 1
+                    if J == 1:
+                        V[J] = 5 * V[J]
+            for K in range(2, Q + 1):
+                if K == J or X[K] == 0:
+                    continue
+                if abs(S5 - X[K]) < 10 and abs(S6 - Y[K]) < 10:
+                    B[K] = math.atan((Y[K] - S2) / (X[K] - S1))
+                    print('\a', end='')  # Beep
+                    if J == 1:
+                        V[J] = V[J] / 5
+                    V[J] = abs(V[J] * B[J] - B[K])
+                    V[K] = abs(V[J] * B[J] - B[K])
+                    B[J] = (P1 / 2) + B[K]
+                    S5 = S1
+                    S6 = S2
+                    if K == 1:
+                        V[K] = 5 * V[K]
+            if V[J] < abs(A * 0.05):
+                break
+            V[J] += A * 0.05
+            S1 = S5
+            S2 = S6
 
-void simulate_ball(int J, int Q, double V[], double B[], double B1[], double D[], double X[], double Y[],
-    double A, double& S1, double& S2, double P1) {
-    double K1 = -20;
-    if (J == 1)
-        K1 = 0;
+        # 1440 X(J)=X(J)+S5: Y(J)=Y(J)+S6:S1=0:S2=0:S5=0:S6=0
+        X[J] = X[J] + S5
+        Y[J] = Y[J] + S6
+        S1 = 0
+        S2 = 0
+        S5 = 0
+        S6 = 0
 
-    while (true) {
-        double A1 = A * cos(B[J]) + K1 * cos((P1 / 2) + B[J]);
-        double A2 = A * sin(B[J]) + K1 * sin((P1 / 2) + B[J]);
+        # 1450 FOR L=1 TO Q
+        for L in range(1, Q + 1):
+            if V[L] > abs(A * 0.05):
+                J = L
+                continue
+            B[L] = 0
+            V[L] = 0
 
-        double S3 = V[J] * B[J] * 0.05 + 1.25E-03 * A1;
-        double S4 = V[J] * B[J] * 0.05 + 1.25E-03 * A2;
+        # 1630 PRINT "JACK AT COORDINATES ";X(1);Y(1)
+        print("JACK AT COORDINATES", X[1], Y[1])
 
-        B[J] = atan((V[J] * B[J] + A2 * 0.05) / (V[J] * B[J] + A1 * 0.05));
+        # 1640 FOR M=2 TO P
+        for M in range(2, P + 1):
+            D_value = (math.sqrt((Y[1] - Y[M]) ** 2 + (X[1] - X[M]) ** 2)) - 7
+            D[M] = max(D_value, 0)
+            # 1670 PRINT"BALL ";(M-1);" AT COORDINATES ";X(M);Y(M);" IT IS ";D(M);
+            print("BALL", M - 1, "AT COORDINATES", X[M], Y[M], "IT IS", D[M], "FROM THE JACK")
 
-        if (B1[J] < 0)
-            S4 = -S4;
+        # 1690 PRINT
+        print()
 
-        double S5 = S1 + S3;
-        double S6 = S2 + S4;
+        # 1700 IF D(P) < 10 THEN PRINT TAB(15);"EXCELLENT SHOT! ";:GOTO 1740
+        if D[P] < 10:
+            print(" " * 15 + "EXCELLENT SHOT!")
+        elif D[P] < 20:
+            print(" " * 15 + "GOOD SHOOTING!")
+        elif D[P] < 30:
+            print(" " * 15 + "NICE TRY !")
+        elif D[P] > 500:
+            print(" " * 5 + "YECH! OVER", int(D[P] / 30.48), "FEET AWAY!")
+        # 1740 IF X(P)>X(1) THEN PRINT "LONG AND ";
+        if X[P] > X[1]:
+            print("LONG AND ", end='')
+        # 1745 IF X(P)< X(1) THEN PRINT "SHORT AND ";
+        if X[P] < X[1]:
+            print("SHORT AND ", end='')
+        # 1750 IF Y(P)>Y(1) THEN PRINT "TO THE LEFT "
+        if Y[P] > Y[1]:
+            print("TO THE LEFT")
+        # 1755 IF Y(P) < Y(1) THEN PRINT "TO THE RIGHT"
+        if Y[P] < Y[1]:
+            print("TO THE RIGHT")
+        # 1760 PRINT
+        print()
 
-        if (J != 1) {
-            if (abs(S5 - X[1]) < 7 && abs(S6 - Y[1]) < 7) {
-                int K = 1;
-                collision_with_jack(J, K, V, B, S1, S2, S5, S6, P1);
-            }
-        }
+        D1 += D[P]
 
-        for (int K = 2; K <= Q; ++K) {
-            if (K == J || X[K] == 0)
-                continue;
-            if (abs(S5 - X[K]) < 10 && abs(S6 - Y[K]) < 10) {
-                collision_with_ball(J, K, V, B, S1, S2, S5, S6, X, Y, P1);
-            }
-        }
+    # 1150 PRINT: PRINT "THE TOTAL DISTANCE OF ALL BALLS FROM THE JACK IS ";
+    # 1155 PRINT D1;" CM"
+    print()
+    print("THE TOTAL DISTANCE OF ALL BALLS FROM THE JACK IS", D1, "CM")
 
-        if (V[J] < abs(A * 0.05)) {
-            // Line 1440
-            X[J] = X[J] + S5;
-            Y[J] = Y[J] + S6;
-            S1 = 0;
-            S2 = 0;
-            S5 = 0;
-            S6 = 0;
-            bool found = false;
-            for (int L = 1; L <= Q; ++L) {
-                if (V[L] > abs(A * 0.05)) {
-                    J = L;
-                    found = true;
-                    break;
-                }
-                B[L] = 0;
-                V[L] = 0;
-            }
-            if (found) {
-                K1 = -20;
-                if (J == 1)
-                    K1 = 0;
-                continue;
-            }
-            else {
-                report_positions(Q, D, X, Y);
-                break;
-            }
-        }
-        else {
-            V[J] = V[J] + (A * 0.05);
-            S1 = S5;
-            S2 = S6;
-            // Go back to start of loop
-            continue;
-        }
-    }
-}
+    # Performance messages
+    if D1 < Q ** 2:
+        print("MAGNIFICENT BOWLING! WHAT AN EYE!!")
+    elif D1 < 2 * Q ** 2:
+        print("EXCELLENT BUT COULD BE BETTER:")
+    elif D1 < 3 * Q ** 2:
+        print("GOOD BUT NEEDS SOME IMPROVEMENT")
+    elif D1 < 6 * Q ** 2:
+        print("FAIR - YOU NEED MORE PRACTICE")
+    elif D1 < 10 * Q ** 2:
+        print("POOR - TRY TO BE MORE CONSISTENT")
+    elif D1 < 20 * Q ** 2:
+        print("YOUR GAME NEEDS LOTS OF WORK")
+    else:
+        print("DON'T PLAY THIS GAME FOR MONEY!!")
 
-void collision_with_ball(int J, int K, double V[], double B[], double& S1, double& S2, double& S5, double& S6,
-    double X[], double Y[], double P1) {
-    B[K] = atan((Y[K] - S2) / (X[K] - S1));
-    cout << '\a'; // Beep sound
-    if (J == 1)
-        V[J] = V[J] / 5;
-    V[J] = abs(V[J] * (B[J] - B[K]));
-    V[K] = abs(V[J] * (B[J] - B[K]));
-    B[J] = (P1 / 2) + B[K];
-    S5 = S1;
-    S6 = S2;
-    if (K == 1)
-        V[K] = 5 * V[K];
-}
+    # 1260 PRINT:INPUT "CARE TO TRY AGAIN? ENTER YES OR NO";Y$
+    print()
+    YS = input("CARE TO TRY AGAIN? ENTER YES OR NO? ")
 
-void collision_with_jack(int J, int K, double V[], double B[], double& S1, double& S2, double& S5, double& S6,
-    double P1) {
-    if (J == 1)
-        V[J] = 5 * V[J];
-}
+    # 1270 PRINT: IF Y$="YES" THEN 1050
+    if YS.strip().upper() != "YES":
+        break
+    print()
 
-void report_positions(int Q, double D[], double X[], double Y[]) {
-    cout << "JACK AT COORDINATES " << X[1] << " " << Y[1] << endl;
-    flag++;
-    for (int M = 2; M <= flag; ++M) {
-        double D_value = sqrt(pow(Y[1] - Y[M], 2) + pow(X[1] - X[M], 2)) - 7;
-        D[M] = D_value;
-        if (D_value < 0)
-            D[M] = 0;
-        cout << "BALL " << (M - 1) << " AT COORDINATES " << X[M] << " " << Y[M] << " IT IS " << D[M]
-            << " FROM THE JACK" << endl;
-        if (M == flag)
-        {
-            if (D[M] < 10) {
-                cout << endl << setw(15) << "EXCELLENT SHOT! " << endl;
-            }
-            else if (D[M] < 20) {
-                cout << endl << setw(15) << "GOOD SHOOTING! " << endl;
-            }
-            else if (D[M] < 30) {
-                cout << endl << setw(15) << "NICE TRY !" << endl;
-            }
-            else if (D[M] > 500) {
-                cout << endl << setw(5) << "YECH! OVER " << int(D[M] / 30.48) << " FEET AWAY!" << endl;
-            }
-            if (X[M] > X[1])
-                cout << "LONG AND ";
-            if (X[M] < X[1])
-                cout << "SHORT AND ";
-            if (Y[M] > Y[1])
-                cout << "TO THE LEFT ";
-            if (Y[M] < Y[1])
-                cout << "TO THE RIGHT";
-            cout << endl;
-        }
-    }
-    cout << endl;
-}
+# 1890 END
