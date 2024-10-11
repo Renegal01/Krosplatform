@@ -34,17 +34,21 @@ make web
 
 Для демонстрации работы портированной игры прилагаются примеры запуска на различных платформах:
 
-Windows: 
+Windows: ![windows bocce](https://github.com/user-attachments/assets/2b475753-036b-44d2-b984-4b4f2d2403bb)
 
-Linux: 
 
-NetBSD: 
+Linux: ![linux bocce](https://github.com/user-attachments/assets/3da4e84b-0d96-411a-9171-3513320c56b3)
+
+
+NetBSD: ![netbsd main](https://github.com/user-attachments/assets/dba9103a-905d-47f6-86c1-8d360473ac1f)
+
 
 Web:
 
 
 # Автоматическое тестирование
 
+![изображение](https://github.com/user-attachments/assets/00bb84ff-74c7-45b0-8167-52aa5ebb7ca1)
 
 
 # История разработки
