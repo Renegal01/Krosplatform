@@ -17,16 +17,16 @@ Web
 Для сборки проекта на различных платформах используется утилита make. 
 Ниже приведены команды для каждой из поддерживаемых платформ.
 
-Windows
+### Windows
 make windows
 
-Linux
+### Linux
 make linux
 
-NetBSD
+### NetBSD
 make netbsd
 
-Web
+### Web
 make web
 
 Примеры работы проекта
