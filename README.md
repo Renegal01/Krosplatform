@@ -27,7 +27,7 @@ make linux
 make netbsd
 
 ### Web
-make web
+mingw32-make web
 
 # Примеры работы проекта
 
