@@ -44,9 +44,10 @@ Linux:
 
 NetBSD: 
 ![netbsd main](https://github.com/user-attachments/assets/dba9103a-905d-47f6-86c1-8d360473ac1f)
-
-
 Web:
+
+![web](https://github.com/user-attachments/assets/3a4b72c3-0f28-4d5b-99c8-46e8ee6553d0)
+
 
 
 # Автоматическое тестирование
