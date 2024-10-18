@@ -46,7 +46,7 @@ NetBSD:
 ![netbsd main](https://github.com/user-attachments/assets/dba9103a-905d-47f6-86c1-8d360473ac1f)
 Web:
 
-![web]![изображение](https://github.com/user-attachments/assets/c97f7c41-6014-43c8-b481-30357255c69d)
+![изображение](https://github.com/user-attachments/assets/c97f7c41-6014-43c8-b481-30357255c69d)
 
 
 
